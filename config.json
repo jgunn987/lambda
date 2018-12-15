@@ -1,0 +1,68 @@
+{
+  "name": "alibi",
+  "region": "us-east-2",
+  "role": {
+    "RoleName": "alibi-lambda",
+    "AssumeRolePolicyDocument": {
+      "Version": "2012-10-17",
+      "Statement": [{
+        "Effect": "Allow",
+        "Principal": {
+          "Service": "lambda.amazonaws.com"
+        },
+        "Action": "sts:AssumeRole"
+      }]
+    }
+  },
+  "policy": {
+    "PolicyName": "alibi-lambda-policy",
+    "PolicyDocument": {
+      "Version": "2012-10-17",
+      "Statement": [{
+        "Action": [
+          "iam:CreateRole",
+          "iam:CreatePolicy",
+          "iam:AttachRolePolicy",
+          "iam:PassRole",
+          "lambda:GetFunction",
+          "lambda:ListFunctions",
+          "lambda:CreateFunction",
+          "lambda:DeleteFunction",
+          "lambda:InvokeFunction",
+          "lambda:GetFunctionConfiguration",
+          "lambda:UpdateFunctionConfiguration",
+          "lambda:UpdateFunctionCode",
+          "lambda:ListVersionsByFunction",
+          "logs:FilterLogEvents",
+          "cloudwatch:GetMetricStatistics"
+        ],
+        "Effect": "Allow",
+        "Resource": "*"
+      }] 
+    }
+  },
+  "layers": {
+    "global": {
+      "includes": [
+        "./node_modules",
+        "./src"
+      ]
+    } 
+  },
+  "functions": {
+    "helloWorld1": {
+      "Description": "",
+      "MemorySize": 128,
+      "Publish": true,
+      "Runtime": "nodejs8.10",
+      "Timeout": 15
+    },
+    "helloWorld2": {
+      "Description": "",
+      "MemorySize": 128,
+      "Publish": true,
+      "Runtime": "nodejs8.10",
+      "Timeout": 15
+    }
+  }
+}
