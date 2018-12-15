@@ -1,6 +1,7 @@
 var config = require('./config.json');
 var Promise = require('promise');
 var fs = require('fs');
+var path = require('path');
 var archiver = require('archiver');
 var AWS = require('aws-sdk');
 AWS.config.update({ region: config.region });
@@ -64,6 +65,7 @@ function createZip(name) {
     
     archive.pipe(output);
 
+    archive.file('./package.json', { name: 'package.json' });
     archive.append(fs.createReadStream(
       __dirname + '/functions/' + name + '.js'
     ), { name: name + '.js' });
@@ -86,7 +88,7 @@ function createLayerZip(name, directories) {
     archive.pipe(output);
 
     directories.forEach(function (d) {
-      archive.directory('./' + d, d);  
+      archive.directory('./' + d, path.join('nodejs', d));
     });
     archive.on('warning', reject);
     archive.on('error', reject);
@@ -149,14 +151,12 @@ function deployFunctions(config, roleArn) {
 
 publishLayers(config).then(console.log)
   .catch(console.log);
-/*
-setupRoleAndPolicy(config).then(function() {
-  return getOrCreateRole(config).then(function (role) {
-    return deployFunctions(config, role.Arn);
-  });
-}).then(console.log)
-  .catch(console.log);
-*/
+//setupRoleAndPolicy(config).then(function() {
+//  return getOrCreateRole(config).then(function (role) {
+//    return deployFunctions(config, role.Arn);
+// });
+//}).then(console.log)
+//  .catch(console.log);
 
 //setupRoleAndPolicy(config)
 //.then(console.log)
